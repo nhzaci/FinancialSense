@@ -38,21 +38,21 @@
             <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on">
                     <v-icon large>
-                        mdi-heart
-                    </v-icon>
-                </v-btn>
-            </template>
-            <span>Favourites</span>
-        </v-tooltip>
-        <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-                <v-btn icon v-on="on">
-                    <v-icon large>
                         mdi-cog
                     </v-icon>
                 </v-btn>
             </template>
             <span>Settings</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on">
+                    <v-icon large>
+                        mdi-account-circle
+                    </v-icon>
+                </v-btn>
+            </template>
+            <span>Account</span>
         </v-tooltip>
         <!-- End of End Icons -->
 
