@@ -1,0 +1,85 @@
+<template>
+    <v-expansion-panel>
+        <v-expansion-panel-header
+            type="list-item-two-lines"
+            v-if="loading"
+        >
+        Loading...
+        </v-expansion-panel-header>
+        <v-expansion-panel-header v-if="!loading">
+           {{ year }} - {{ month }} 
+        </v-expansion-panel-header>
+        <v-expansion-panel-content v-if="!loading">
+            <v-row>
+                <v-col cols="4">
+                    <v-card>
+                        <v-card-title style="color:blue;">
+                            Balance: {{ balance }}
+                        </v-card-title>
+                    </v-card>
+                </v-col>
+                <v-col cols="4">
+                    <v-card>
+                        <v-card-title style="color:red;">
+                            Expenditure: {{ expenditure }}
+                        </v-card-title>
+                    </v-card>
+                </v-col>
+                <v-col cols="4">
+                    <v-card>
+                        <v-card-title style="color:green;">
+                            Income: {{ income }}
+                        </v-card-title>
+                    </v-card>
+                </v-col>
+            </v-row>
+        </v-expansion-panel-content>
+    </v-expansion-panel>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+    data () {
+        return {
+            dataArray: [],
+            loading: true,
+            balance: 0,
+            expenditure: 0,
+            income: 0
+        }
+    },
+    props: {
+        year: {
+            type: String
+        },
+        month: {
+            type: String
+        }
+    },
+    methods: {
+
+    },
+    created() {
+        let url = `http://localhost:3000/api/posts/date/${this.year}/${this.month}`;
+        axios.get(url)
+            .then(res => {
+                this.dataArray = res.data;
+                var i, j;
+                for (i = 0; i < this.dataArray.length; i++) {
+                    let curr = this.dataArray[i];
+                        if (curr.type === "Expenses") {
+                            this.expenditure += curr.money;
+                            this.balance -= curr.money;
+                        } else {
+                            this.income += curr.money;
+                            this.balance += curr.money;
+                        }
+                }
+                this.loading = false;
+            })
+            .catch(err => console.log(err));
+    }
+}
+</script>

@@ -10,7 +10,24 @@
     <v-content>
       <!-- Page content -->
       <nuxt/>
+
+      <!-- Floating add button here -->
+      <v-btn
+        color="pink"
+        dark
+        large
+        fixed
+        bottom
+        right
+        fab
+        @click="toggleModalOpen"
+      >
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
     </v-content>
+
+    <!-- AddModal component here -->
+    <AddModal />
 
     <!-- Footer here -->
 
@@ -19,13 +36,30 @@
 </template>
 
 <script>
+import AddModal from '@/components/AddModal';
 import NavBar from '@/components/NavBar';
 import NavDrawer from '@/components/NavDrawer';
 
 export default {
   components: {
+    AddModal,
     NavBar,
     NavDrawer
+  },
+  methods: {
+    toggleModalOpen () {
+      this.addModalOpen = !this.addModalOpen;
+    }
+  },
+  computed: {
+    addModalOpen: {
+        get () {
+            return this.$store.state.addModalOpen;
+        },
+        set (bool) {
+            this.$store.commit('set_addModalOpen', bool);
+        }
+    }
   }
 }
 </script>

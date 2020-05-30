@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 export const state = () => ({
+    months: ['January','Feburary','March','April','May','June','July','August','September','October','November','December'],
     routes: [
         { title: 'Home', icon: 'mdi-home', path: '/'},
         { title: 'Track', icon: 'mdi-trending-up', path: '/track'},
@@ -13,7 +14,8 @@ export const state = () => ({
     favourites: [],
     loadingDB: true,
     loadingYears: true,
-    loadingMonthYears: true
+    loadingMonthYears: true,
+    addModalOpen: false
 })
 
 export const mutations = {
@@ -34,6 +36,9 @@ export const mutations = {
     },
     set_years (state, years) {
         state.years = years;
+    },
+    set_addModalOpen (state, bool) {
+        state.addModalOpen = bool;
     }
 }
 

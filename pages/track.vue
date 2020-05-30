@@ -1,12 +1,9 @@
 <template>
     <v-container fluid>
 
-        <!-- Floating tool bar to add new transactions -->
-
         <v-skeleton-loader
             v-if="loadingDB"
             height="94"
-            width="60%"
             type="list-item-two-line"
         />
         
@@ -40,22 +37,35 @@
 </template>
 
 <script>
-import AddToolbar from '@/components/AddToolbar';
 
 export default {
     components: {
-        AddToolbar
     },
     methods: {
         colourHeader (item) {
+            let color;
+            let text;
             if (item.type === "Expenses") {
-                return '<span style="color:red;">' + item.money + ' - ' + item.category + '</span>';
+                color = 'red';
+                text = 'spent';
             } else {
-                return '<span style="color:green;">' + item.money + ' - ' + item.category + '</span>';
+                color = 'green';
+                text = 'saved';
             }
+            return `<span style="color:${color};"> ${item.money} ${text} on ${item.category} on ${this.formatDate(item.date)} </span>`;
+            
+        },
+        formatDate (date) {
+            let dateObj = new Date(date);
+            return dateObj.getFullYear() + ' ' + this.months[dateObj.getMonth()]
         }
     },
     computed: {
+        months: {
+            get () {
+                return this.$store.state.months;
+            }
+        },
         dbArray: {
             get () {
                 return this.$store.state.dbArray;

@@ -24,74 +24,30 @@
     <v-row justify="space-between">
       <v-col>
         <!-- Average Expenditure Chart -->
-        <v-card
-          class="pa-5 ma-5"
-          shaped
-        >
-          <v-card-title>
-            <span class="font-weight-bold mx-2">
-              Average Expenditure
-            </span> 
-            <v-icon large>mdi-trending-down</v-icon>
-          </v-card-title>
-          <v-sheet color="transparent">
-            <v-sparkline
-              :value="value"
-              :gradient="gradient"
-              :smooth="radius || false"
-              :padding="padding"
-              :line-width="width"
-              :stroke-linecap="lineCap"
-              :gradient-direction="gradientDirection"
-              :fill="fill"
-              :type="type"
-              :auto-line-width="autoLineWidth"
-              auto-draw
-            ></v-sparkline>
-          </v-sheet>
-        </v-card>
+        <ChartCard title="Expenditure" />
       </v-col>
 
       <v-col>
         <!-- Average Savings Chart -->
-        <v-card
-          class="pa-5 ma-5"
-          shaped
-        >
-          <v-card-title>
-            <span class="font-weight-bold mx-2">Average Savings</span> 
-            <v-icon large>mdi-trending-up</v-icon>
-          </v-card-title>
-          <v-sheet color="transparent">
-            <v-sparkline
-              :value="value"
-              :gradient="gradient"
-              :smooth="radius || false"
-              :padding="padding"
-              :line-width="width"
-              :stroke-linecap="lineCap"
-              :gradient-direction="gradientDirection"
-              :fill="fill"
-              :type="type"
-              :auto-line-width="autoLineWidth"
-              auto-draw
-            ></v-sparkline>
-          </v-sheet>
-        </v-card>
+        <ChartCard title="Savings" />
       </v-col>
     </v-row>
     <!-- End of Middle row of cards -->
     
     <!-- Bottom Row of cards -->
     <v-row class="ma-5 pa-5">
+      
       <v-skeleton-loader 
         v-if="loadingMonthYears"
         type="list-item-two-lines"
       />
       <v-expansion-panels popout v-else>
-        <v-expansion-panel v-for="mthYr in monthYears" :key="mthYr.year+mthYr.month">
-          <v-expansion-panel-header>{{ mthYr.year }} - {{ mthYr.month }}</v-expansion-panel-header>
-        </v-expansion-panel>
+        <AsyncExpPanel 
+          v-for="mthYr in monthYears" 
+          :key="mthYr.year + mthYr.month" 
+          :year="String(mthYr.year)"
+          :month="String(mthYr.month)"
+        />
       </v-expansion-panels>
     </v-row>
     <!-- End of Bottom Row of cards -->
@@ -100,48 +56,18 @@
 </template>
 
 <script>
+import axios from 'axios';
+import AsyncExpPanel from '@/components/AsyncExpPanel';
+import ChartCard from '@/components/ChartCard';
 import OverviewCard from '@/components/OverviewCard';
-
-const gradients = [
-    ['#222'],
-    ['#42b3f4'],
-    ['red', 'orange', 'yellow'],
-    ['purple', 'violet'],
-    ['#00c6ff', '#F0F', '#FF0'],
-    ['#f72047', '#ffd200', '#1feaea'],
-  ]
 
 export default {
   components: {
+    AsyncExpPanel,
+    ChartCard,
     OverviewCard
   },
   data: () => ({
-    months: [
-      'January',
-      'Feburary',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ],
-    width: 2,
-    radius: 10,
-    padding: 8,
-    lineCap: 'round',
-    gradient: gradients[5],
-    value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
-    gradientDirection: 'top',
-    gradients,
-    fill: false,
-    type: 'trend',
-    autoLineWidth: false,
-    months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
   }),
   computed: {
     expenditureArray: {
@@ -163,6 +89,19 @@ export default {
       get () {
         return this.$store.state.loadingMonthYears;
       }
+    },
+  },
+  methods: {
+    async getTransactionArray (year, month) {
+      let url = `http://localhost:3000/api/posts/${year}/${month}`;
+      let retData = undefined;
+      let data = await this.axios.get(url)
+        .then(res => {
+          retData = res.data
+        })
+        .catch(err => console.log(err));
+      return retData;
+
     }
   },
   created() {
