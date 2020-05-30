@@ -84,8 +84,13 @@
     
     <!-- Bottom Row of cards -->
     <v-row class="ma-5 pa-5">
-      <v-expansion-panels>
-        <v-expansion-panel>
+      <v-skeleton-loader 
+        v-if="loadingMonthYears"
+        type="list-item-two-lines"
+      />
+      <v-expansion-panels popout v-else>
+        <v-expansion-panel v-for="mthYr in monthYears" :key="mthYr.year+mthYr.month">
+          <v-expansion-panel-header>{{ mthYr.year }} - {{ mthYr.month }}</v-expansion-panel-header>
         </v-expansion-panel>
       </v-expansion-panels>
     </v-row>
@@ -148,10 +153,20 @@ export default {
       get() {
         return this.$store.state.dbArray;
       }
+    },
+    monthYears: {
+      get() {
+        return this.$store.state.monthYears;
+      }
+    },
+    loadingMonthYears: {
+      get () {
+        return this.$store.state.loadingMonthYears;
+      }
     }
   },
   created() {
-    this.$store.dispatch('get_dbArray');
+    this.$store.dispatch('get_monthYears');
   }
 }
 </script>

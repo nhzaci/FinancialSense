@@ -12,6 +12,8 @@ export const state = () => ({
     dbArray: [],
     favourites: [],
     loadingDB: true,
+    loadingYears: true,
+    loadingMonthYears: true
 })
 
 export const mutations = {
@@ -20,6 +22,12 @@ export const mutations = {
     },
     set_loadingDB (state, bool) {
         state.loadingDB = bool;
+    },
+    set_loadingMonthYears (state, bool) {
+        state.loadingMonthYears = bool;
+    },
+    set_loadingYears (state, bool) {
+        state.loadingYears = bool;
     },
     set_monthYears (state, monthYears) {
         state.monthYears = monthYears;
@@ -36,21 +44,23 @@ export const actions = {
             .then(res => {
                 // fill up dbArray with data
                 commit('set_dbArray', res.data);
-                commit('set_loadingDB', false)
+                commit('set_loadingDB', false);
             })
             .catch(err => console.log(err));
     },
     async get_monthYears({ commit }) {
         axios.get('http://localhost:3000/api/posts/date/getMonthYears')
             .then(res => {
-                commit('set_monthYears', res.data)
+                commit('set_monthYears', res.data);
+                commit('set_loadingMonthYears', false);
             })
             .catch(err => console.log(err));
     },
     async get_years({ commit }) {
         axios.get('http://localhost:3000/api/posts/date/getYears')
             .then(res => {
-                commit('set_years', res.data)
+                commit('set_years', res.data);
+                commit('set_loadingYears', false);
             })
             .catch(err => console.log(err));
     }

@@ -8,9 +8,7 @@
             height="94"
             width="60%"
             type="list-item-two-line"
-        >
-
-        </v-skeleton-loader>
+        />
         
         <v-expansion-panels popout v-else>
             <v-expansion-panel
