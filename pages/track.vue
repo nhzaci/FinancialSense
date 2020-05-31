@@ -85,18 +85,58 @@
 
                 <!-- Panel content -->
                 <v-expansion-panel-content>
-                    <p>
-                        <span class="font-weight-bold">Type: </span>{{ item.type }}
-                    </p>
-                    <p>
-                        <span class="font-weight-bold">Category: </span>{{ item.category }}
-                    </p>
-                    <p>
-                        <span class="font-weight-bold">Note: </span>{{ item.note }}
-                    </p>
-                    <p>
-                        <span class="font-weight-bold">Date: </span>{{ item.date }}
-                    </p>
+                    <v-row>
+                        <v-col cols="4">
+                            <v-card>
+                                <v-card-title class="justify-center">
+                                    Amount:
+                                </v-card-title>
+                                <v-card-text class="text-center headline font-weight-bold">
+                                    {{ item.money }}
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="2">
+                            <v-card>
+                                <v-card-title class="justify-center">
+                                    Type:
+                                </v-card-title>
+                                <v-card-text class="text-center">
+                                    {{ item.type }}
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="2">
+                            <v-card>
+                                <v-card-title class="justify-center">
+                                    Category:
+                                </v-card-title>
+                                <v-card-text class="text-center">
+                                    {{ item.category }}
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="2">
+                            <v-card>
+                                <v-card-title class="justify-center">
+                                    Note:
+                                </v-card-title>
+                                <v-card-text class="text-center">
+                                    {{ item.note }}
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="2">
+                            <v-card>
+                                <v-card-title class="justify-center">
+                                    Date:
+                                </v-card-title>
+                                <v-card-text class="text-center">
+                                    {{ formatDate(item.date) }}
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                    </v-row>
                 </v-expansion-panel-content>
             </v-expansion-panel>
         </v-expansion-panels>
@@ -116,7 +156,7 @@ export default {
                 text = " saved from "
                 sign = "+ "
             }
-            return sign + item.money + ' on ' + this.formatDate(item.date) + text + item.note;
+            return sign + item.money + ' on ' + this.formatDate(item.date);
         },
         getColour (item) {
             if (item.type === "Expense") {
@@ -127,7 +167,7 @@ export default {
         },
         formatDate (date) {
             let dateObj = new Date(date);
-            return dateObj.getFullYear() + ' ' + this.months[dateObj.getMonth()]
+            return dateObj.getDate() + ' ' + this.months[dateObj.getMonth()] + ' ' + dateObj.getFullYear()
         }
     },
     computed: {
