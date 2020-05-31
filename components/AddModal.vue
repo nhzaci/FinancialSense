@@ -12,18 +12,6 @@
             >
                 <v-card-title>
                     Add Transaction
-                    <p>
-                        {{ category }}
-                    </p>
-                    <p>
-                        {{ type }}
-                    </p>
-                    <p>
-                        {{ note }}
-                    </p>
-                    <p>
-                        {{ money }}
-                    </p>
                 </v-card-title>
                 <v-container fluid>
                     <v-row align="center">
