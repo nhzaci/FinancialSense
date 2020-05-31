@@ -146,6 +146,13 @@
 
 <script>
 export default {
+    data () {
+        return {
+            duration: 'YTD',
+            type: '',
+            category: ''
+        }
+    },
     methods: {
         customHeader (item) {
             let text, sign;

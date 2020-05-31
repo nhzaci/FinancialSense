@@ -41,7 +41,12 @@
         v-if="loadingMonthYears"
         type="list-item-two-lines"
       />
-      <v-expansion-panels popout v-else>
+      <v-expansion-panels 
+        popout 
+        v-else
+        hover
+        focusable
+      >
         <AsyncExpPanel 
           v-for="mthYr in monthYears" 
           :key="mthYr.year + mthYr.month" 

@@ -11,6 +11,11 @@
             class="headline font-weight-bold"
         >
             Summary for {{ formattedDate }}
+            <!-- Custom icon for income / expenses -->
+            <template v-slot:actions>
+                <v-icon color="green" v-if="balance >= 0">mdi-plus</v-icon>
+                <v-icon color="red" v-else>mdi-minus</v-icon>
+            </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content v-if="!loading">
             <v-row>
