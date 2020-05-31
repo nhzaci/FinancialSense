@@ -5,7 +5,7 @@
             v-model="successOpen"
             dismissible
             elevation-5
-            class="pa-5"
+            class="ma-5 pa-5"
         >
             {{ successText }}
         </v-alert>
@@ -14,7 +14,7 @@
             v-model="infoOpen"
             dismissible
             elevation-5
-            class="pa-5"
+            class="ma-5 pa-5"
         >
             {{ infoText }}
         </v-alert>
@@ -23,7 +23,7 @@
             v-model="warningOpen"
             dismissible
             elevation-5
-            class="pa-5"
+            class="ma-5 pa-5"
         >
             {{ warningText }}
         </v-alert>
@@ -32,7 +32,7 @@
             v-model="errorOpen"
             dismissible
             elevation-5
-            class="pa-5"
+            class="ma-5 pa-5"
         >
             {{ errorText }}
         </v-alert>

@@ -1,6 +1,6 @@
 <template>
-    <v-container class="ma-0 pa-0">
-        <v-card class="ma-5 pa-5">
+    <v-container class="ma-0 pa-0 px-5">
+        <v-card class="pa-5">
           <v-card-title>
               {{ title }}
           </v-card-title>

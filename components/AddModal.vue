@@ -13,11 +13,14 @@
                 <v-card-title>
                     Add Transaction
                 </v-card-title>
+
                 <v-container fluid>
+                    
+                    <!-- First row -->
                     <v-row align="center">
-                        <v-col
-                            cols="3"
-                        >
+                        
+                        <!-- Col 1 -->
+                        <v-col cols="3">
                             <!-- Indicate type (exp / inc) -->
                             <v-overflow-btn
                                 class="mx-2"
@@ -26,12 +29,10 @@
                                 target="#addToolbar"
                                 v-model="type"
                             ></v-overflow-btn>
-
                         </v-col>
                         
-                        <v-col
-                            cols="3"
-                        >
+                        <!-- Col 2 -->
+                        <v-col cols="3">
                             <!-- Indicate expense category -->
                             <v-overflow-btn
                                 class="mx-2"
@@ -53,9 +54,8 @@
                             ></v-overflow-btn>
                         </v-col>
 
-                        <v-col
-                            cols="6"
-                        >
+                        <!-- Col 3 -->
+                        <v-col cols="6">
                             <!-- Indicate note -->
                             <v-text-field 
                                 solo
@@ -69,6 +69,7 @@
                         </v-col>
                     </v-row>
 
+                    <!-- Second row -->
                     <v-row justify="center">
                         <v-text-field
                             :rules="rules"
@@ -80,6 +81,8 @@
                     </v-row>
 
                 </v-container>
+
+                <!-- Card bottom -->
                 <v-card-actions>
                     <!-- Action buttons -->
                     <v-btn class="mx-4" color="primary" large @click="save">
@@ -102,6 +105,7 @@
                         </template>
                         <span>Favourite</span>
                     </v-tooltip>
+
                     <!-- End Share Icon -->
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
@@ -113,9 +117,12 @@
                         </template>
                         <span>Share</span>
                     </v-tooltip>
+
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <!-- Second v-dialog for confirmation of deletion -->
     </v-row>
 </template>
 
@@ -134,7 +141,7 @@ export default {
                 value => {
                     const pattern = /^\$?\d+(\.\d{2})?$/
                     return pattern.test(value) || "Invalid amount, commas are not allowed"
-                }
+                } //pattern looks for numbers and optional decimal with 2 numbers
             ],
             noteRules: [
                 value => !!value || "A note is required!"
@@ -166,12 +173,16 @@ export default {
                         if (res.status === 200) {
                             this.successText = 'Successfully added your new post';
                             this.successOpen = true;
-                        } else {
-                            this.errorText = 'Something went wrong, error: ' + res.data
-                            this.errorOpen = true;
+                            //On success, clear all v-model fields
+                            this.clearFields();
                         }
                     })
-                    .catch(err => console.log(err));
+                    .catch(err => {
+                        this.infoOpen = false;
+                        console.log(err);
+                        this.errorText = 'Something went wrong, error: ' + err;
+                        this.errorOpen = true;
+                    });
             } else {
                 // Form not fully filled
                 this.warningOpen = true;
@@ -181,6 +192,12 @@ export default {
         clear () {
             //Modal, check confirmation before cancelling
             console.log("clear button clicked")
+        },
+        clearFields () {
+            this.type = "";
+            this.category = "";
+            this.money = "";
+            this.note = "";
         }
     },
     computed: {

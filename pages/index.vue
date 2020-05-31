@@ -11,12 +11,12 @@
 
       <!-- Expenditure -->
       <v-col>
-        <OverviewCard title="Expenditure" :amount="Number(5334.64)"/>
+        <OverviewCard title="Expense" :amount="Number(5334.64)"/>
       </v-col>
 
       <!-- Income -->
       <v-col>
-        <OverviewCard title="Savings" :amount="Number(6568.76)" />
+        <OverviewCard title="Income" :amount="Number(6568.76)" />
       </v-col>
     </v-row>
 
@@ -34,8 +34,8 @@
     </v-row>
     <!-- End of Middle row of cards -->
     
-    <!-- Bottom Row of cards -->
-    <v-row class="ma-5 pa-5">
+    <!-- Bottom Row -->
+    <v-row class="pa-5">
       
       <v-skeleton-loader 
         v-if="loadingMonthYears"
@@ -95,19 +95,6 @@ export default {
         return this.$store.state.loadingMonthYears;
       }
     },
-  },
-  methods: {
-    async getTransactionArray (year, month) {
-      let url = `http://localhost:3000/api/posts/${year}/${month}`;
-      let retData = undefined;
-      let data = await this.axios.get(url)
-        .then(res => {
-          retData = res.data
-        })
-        .catch(err => console.log(err));
-      return retData;
-
-    }
   },
   created() {
     this.$store.dispatch('get_monthYears');
