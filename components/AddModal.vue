@@ -12,6 +12,18 @@
             >
                 <v-card-title>
                     Add Transaction
+                    <p>
+                        {{ category }}
+                    </p>
+                    <p>
+                        {{ type }}
+                    </p>
+                    <p>
+                        {{ note }}
+                    </p>
+                    <p>
+                        {{ money }}
+                    </p>
                 </v-card-title>
                 <v-container fluid>
                     <v-row align="center">
@@ -51,6 +63,8 @@
                                 class="mx-4" 
                                 height="100%"
                                 label="Notes"
+                                v-model="note"
+                                :rules="noteRules"
                             ></v-text-field>
 
                         </v-col>
@@ -61,10 +75,9 @@
                             :rules="rules"
                             outlined
                             label="Amount"
+                            v-model="money"
                             class="mx-4"
-                        >
-                            
-                        </v-text-field>
+                        ></v-text-field>
                     </v-row>
 
                 </v-container>
@@ -101,7 +114,6 @@
                         </template>
                         <span>Share</span>
                     </v-tooltip>
-
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -109,21 +121,63 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
-            type: null,
-            category: null,
-            note: null,
-            money: null,
+            type: "",
+            category: "",
+            note: "",
+            money: "",
             rules: [
-                value => !!value || "An amount is required!"
+                value => !!value || "An amount is required!",
+                value => {
+                    const pattern = /^\$?\d+(\.\d{2})?$/
+                    return pattern.test(value) || "Invalid amount, commas are not allowed"
+                }
+            ],
+            noteRules: [
+                value => !!value || "A note is required!"
             ]
         }
     },
     methods: {
         save() {
-            console.log("save button clicked")
+            if (this.type !== "" && 
+                this.category !== "" && 
+                this.note !== "" && 
+                this.money !== "") {
+                    //Close modal
+                    this.addModalOpen = false;
+                    this.warningOpen = false; // in case warning got opened
+                    this.infoText = 'Posting...'
+                    this.infoOpen = true;
+
+                    //if all fields filled, send post
+                    let url = 'http://localhost:3000/api/posts';
+                    axios.post(url, {
+                        type: this.type,
+                        category: this.category,
+                        note: this.note,
+                        money: Number(this.money)
+                    })
+                    .then(res => {
+                        this.infoOpen = false;
+                        if (res.status === 200) {
+                            this.successText = 'Successfully added your new post';
+                            this.successOpen = true;
+                        } else {
+                            this.errorText = 'Something went wrong, error: ' + res.data
+                            this.errorOpen = true;
+                        }
+                    })
+                    .catch(err => console.log(err));
+            } else {
+                // Form not fully filled
+                this.warningOpen = true;
+                this.warningText = 'Please fill up all fields!'
+            }
         },
         clear () {
             //Modal, check confirmation before cancelling
@@ -148,7 +202,71 @@ export default {
             set (bool) {
                 this.$store.commit('set_addModalOpen', bool);
             }
-        }
+        },
+        successText: {
+            get () {
+                return this.$store.state.alerts.successText
+            },
+            set (text) {
+                this.$store.commit('alerts/set_successText', text);
+            }
+        },
+        infoText: {
+            get () {
+                return this.$store.state.alerts.infoText
+            },
+            set (text) {
+                this.$store.commit('alerts/set_infoText', text);
+            }
+        },
+        warningText: {
+            get () {
+                return this.$store.state.alerts.warningText
+            },
+            set (text) {
+                this.$store.commit('alerts/set_warningText', text);
+            }
+        },
+        errorText: {
+            get () {
+                return this.$store.state.alerts.errorText
+            },
+            set (text) {
+                this.$store.commit('alerts/set_errorText', text);
+            }
+        },
+        infoOpen: {
+            get () {
+                return this.$store.state.alerts.infoOpen
+            },
+            set (bool) {
+                this.$store.commit('alerts/set_infoOpen', bool);
+            }
+        },
+        successOpen: {
+            get () {
+                return this.$store.state.alerts.successOpen
+            },
+            set (bool) {
+                this.$store.commit('alerts/set_successOpen', bool);
+            }
+        },
+        warningOpen: {
+            get () {
+                return this.$store.state.alerts.warningOpen
+            },
+            set (bool) {
+                this.$store.commit('alerts/set_warningOpen', bool);
+            }
+        },
+        errorOpen: {
+            get () {
+                return this.$store.state.alerts.errorOpen
+            },
+            set (bool) {
+                this.$store.commit('alerts/set_errorOpen', bool);
+            }
+        },
     }
 }
 </script>

@@ -8,6 +8,9 @@
     <NavDrawer />
 
     <v-content>
+      <!-- Alert banner here -->
+      <Alerts />
+
       <!-- Page content -->
       <nuxt/>
 
@@ -37,12 +40,14 @@
 
 <script>
 import AddModal from '@/components/AddModal';
+import Alerts from '@/components/Alerts';
 import NavBar from '@/components/NavBar';
 import NavDrawer from '@/components/NavDrawer';
 
 export default {
   components: {
     AddModal,
+    Alerts,
     NavBar,
     NavDrawer
   },
