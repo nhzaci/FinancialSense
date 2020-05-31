@@ -1,15 +1,7 @@
 <template>
     <v-expansion-panel>
-        <!-- Placeholder when loading -->
-        <v-expansion-panel-header
-            v-if="loading"
-        >
-        Loading...
-        </v-expansion-panel-header>
-
         <!-- Actual panel when loaded -->
         <v-expansion-panel-header 
-            v-if="!loading"
             class="headline font-weight-bold"
         >
             Summary for {{ formattedDate }}
@@ -19,6 +11,20 @@
                 <v-icon color="red" v-else>mdi-minus</v-icon>
             </template>
         </v-expansion-panel-header>
+
+        <!-- Loading Placeholder -->
+        <v-expansion-panel-content
+            v-if="loading"
+        >
+            <v-card 
+                loading
+                class="mt-5"
+            >
+                <v-card-title>
+                    Loading...
+                </v-card-title>
+            </v-card>
+        </v-expansion-panel-content>
 
         <!-- Panel content holding the cards -->
         <v-expansion-panel-content v-if="!loading">
