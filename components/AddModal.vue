@@ -1,8 +1,8 @@
 <template>
     <v-row justify="center">
         <v-dialog 
+            max-width="auto"
             v-model="addModalOpen" 
-            width="50%" 
         >
             <v-card
                 id="addToolbar"
@@ -32,13 +32,24 @@
                         <v-col
                             cols="3"
                         >
-                            <!-- Indicate category (shopping, etc) -->
+                            <!-- Indicate expense category -->
                             <v-overflow-btn
                                 class="mx-2"
-                                :items="trackCat"
+                                :items="expCat"
                                 label="Category"
                                 target="#addToolbar"
                                 v-model="category"
+                                v-if="type==='Expense'"
+                            ></v-overflow-btn>
+
+                            <!-- Indicate income category -->
+                            <v-overflow-btn
+                                class="mx-2"
+                                :items="incCat"
+                                label="Category"
+                                target="#addToolbar"
+                                v-model="category"
+                                v-else
                             ></v-overflow-btn>
                         </v-col>
 
@@ -178,9 +189,14 @@ export default {
                 return this.$store.state.track.trackType;
             }
         },
-        trackCat: {
+        incCat: {
             get () {
-                return this.$store.state.track.trackCat;
+                return this.$store.state.track.incCat;
+            }
+        },
+        expCat: {
+            get () {
+                return this.$store.state.track.expCat;
             }
         },
         addModalOpen: {

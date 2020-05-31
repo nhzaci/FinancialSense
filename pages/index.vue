@@ -21,7 +21,7 @@
     </v-row>
 
     <!-- Middle row of cards -->
-    <v-row justify="space-between">
+    <v-row justify="center">
       <v-col>
         <!-- Average Expenditure Chart -->
         <ChartCard title="Expenditure" />

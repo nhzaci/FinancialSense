@@ -1,21 +1,89 @@
 <template>
     <v-container fluid>
 
+        <!-- Top title banner -->
+        <v-row>
+            <v-card
+                width="100%"
+                class="ma-10 mt-5 pa-3"
+                color="orange darken-4"
+                elevation-10
+            >
+                <v-card-title class="display-1 font-weight-bold">
+                    Transaction History
+                </v-card-title>
+                <v-card-actions>
+                    <v-row align="center" justify="end">
+                        <v-col>
+                            <v-card>
+                                <v-card-title>
+                                    Filters
+                                </v-card-title>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="2">
+                            <v-overflow-btn
+                                :items="['Income', 'Expense']"
+                                label="Type"
+                                :loading="loadingDB"
+                            ></v-overflow-btn>
+                        </v-col>
+                        <v-col cols="2">
+                            <v-overflow-btn
+                                :items="['Income', 'Expense']"
+                                label="Category"
+                                :loading="loadingDB"
+                            ></v-overflow-btn>
+                        </v-col>
+                        <v-col cols="2">
+                            <v-overflow-btn
+                                :items="['YTD', 'All-Time']"
+                                label="Duration"
+                                :loading="loadingDB"
+                            ></v-overflow-btn>
+                        </v-col>
+                    </v-row>
+                </v-card-actions>
+            </v-card>
+        </v-row>
+
+        <!-- Skeleton loader while loading -->
         <v-skeleton-loader
             v-if="loadingDB"
-            height="94"
+            class="px-10"
+            height="100"
             type="list-item-two-line"
         />
-        
-        <v-expansion-panels popout v-else>
+
+        <!-- Expansion panels for all transactions here -->
+        <v-expansion-panels 
+            v-if="!loadingDB"
+            class="px-10"
+            hover
+            focusable
+            popout
+            multiple
+        >
             <v-expansion-panel
                 v-for="item in dbArray"
                 :key="item._id"
             >
+
+                <!-- Panel header text -->
                 <v-expansion-panel-header 
                     class="font-weight-bold display-1" 
-                    v-html="colourHeader(item)"
-                />
+                >
+                    <span :style="getColour(item)">
+                        {{ customHeader(item) }}
+                    </span>
+                    <!-- Custom icon for income / expenses -->
+                    <template v-slot:actions>
+                        <v-icon color="green" v-if="item.type=='Income'">mdi-plus</v-icon>
+                        <v-icon color="red" v-else>mdi-minus</v-icon>
+                    </template>
+                </v-expansion-panel-header>
+
+                <!-- Panel content -->
                 <v-expansion-panel-content>
                     <p>
                         <span class="font-weight-bold">Type: </span>{{ item.type }}
@@ -37,23 +105,25 @@
 </template>
 
 <script>
-
 export default {
-    components: {
-    },
     methods: {
-        colourHeader (item) {
-            let color;
-            let text;
-            if (item.type === "Expenses") {
-                color = 'red';
-                text = 'spent';
+        customHeader (item) {
+            let text, sign;
+            if (item.type === "Expense" || item.type === "Expenses") {
+                text = " spent on "
+                sign = "- "
             } else {
-                color = 'green';
-                text = 'saved';
+                text = " saved from "
+                sign = "+ "
             }
-            return `<span style="color:${color};"> ${item.money} ${text} on ${item.category} on ${this.formatDate(item.date)} </span>`;
-            
+            return sign + item.money + ' on ' + this.formatDate(item.date) + text + item.note;
+        },
+        getColour (item) {
+            if (item.type === "Expense") {
+                return 'color:Crimson'
+            } else {
+                return 'color:MediumSeaGreen'
+            }
         },
         formatDate (date) {
             let dateObj = new Date(date);

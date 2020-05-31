@@ -6,14 +6,17 @@
         >
         Loading...
         </v-expansion-panel-header>
-        <v-expansion-panel-header v-if="!loading">
-           {{ year }} - {{ month }} 
+        <v-expansion-panel-header 
+            v-if="!loading"
+            class="headline font-weight-bold"
+        >
+            Summary for {{ formattedDate }}
         </v-expansion-panel-header>
         <v-expansion-panel-content v-if="!loading">
             <v-row>
                 <v-col cols="4">
                     <v-card>
-                        <v-card-title style="color:blue;">
+                        <v-card-title style="color:lightBlue;">
                             Balance: {{ balance }}
                         </v-card-title>
                     </v-card>
@@ -59,7 +62,17 @@ export default {
         }
     },
     methods: {
-
+    },
+    computed: {
+        months: {
+            get () {
+                return this.$store.state.months
+            }
+        },
+        formattedDate () {
+            let date = new Date(this.year, this.month, 1);
+            return date.getFullYear() + ' ' + this.months[date.getMonth()]
+        },
     },
     created() {
         let url = `http://localhost:3000/api/posts/date/${this.year}/${this.month}`;

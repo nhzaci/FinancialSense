@@ -1,4 +1,5 @@
 <template>
+  <v-container class="ma-0 pa-0">
     <v-card
       class="pa-5 ma-5"
       shaped
@@ -23,6 +24,7 @@
         ></v-sparkline>
       </v-sheet>
     </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -40,7 +42,7 @@ export default {
         radius: 10,
         padding: 8,
         lineCap: 'round',
-        gradient: gradients[5],
+        gradient: gradients[2],
         value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
         gradientDirection: 'top',
         gradients,

@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app light>
 
     <!-- Nav Bar Here -->
     <NavBar />
@@ -14,7 +14,7 @@
       <!-- Page content -->
       <nuxt/>
 
-      <!-- Floating add button here -->
+      <!-- Floating add button -->
       <v-btn
         color="pink"
         dark
