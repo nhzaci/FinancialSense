@@ -11,7 +11,7 @@
                 elevation-5
             >
                 <v-card-title>
-                    Add Transaction
+                    {{ mode }} Transaction
                 </v-card-title>
 
                 <v-container fluid>
@@ -132,10 +132,10 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            type: "",
-            category: "",
-            note: "",
-            money: "",
+            type: '',
+            category: '',
+            note: '',
+            money: '',
             rules: [
                 value => !!value || "An amount is required!",
                 value => {
@@ -160,29 +160,51 @@ export default {
                     this.infoText = 'Posting...'
                     this.infoOpen = true;
 
-                    //if all fields filled, send post
-                    let url = 'http://localhost:3000/api/posts';
-                    axios.post(url, {
+                    //headers required
+                    var headers = {
                         type: this.type,
                         category: this.category,
                         note: this.note,
-                        money: Number(this.money)
-                    })
-                    .then(res => {
-                        this.infoOpen = false;
-                        if (res.status === 200) {
-                            this.successText = 'Successfully added your new post';
-                            this.successOpen = true;
-                            //On success, clear all v-model fields
-                            this.clearFields();
-                        }
-                    })
-                    .catch(err => {
-                        this.infoOpen = false;
-                        console.log(err);
-                        this.errorText = 'Something went wrong, error: ' + err;
-                        this.errorOpen = true;
-                    });
+                        money: this.money
+                    };
+
+                    //if all fields filled, send post
+                    let url = 'http://localhost:3000/api/posts';
+                    if (this.modalEditMode) {
+                        axios.put(url + '/id/' + this.modalEditId, headers)
+                        .then(res => {
+                            this.infoOpen = false;
+                            if (res.status === 200) {
+                                this.successText = 'Successfully added your new post';
+                                this.successOpen = true;
+                                //On success, clear all v-model fields
+                                this.clearFields();
+                            }
+                        })
+                        .catch(err => {
+                            this.infoOpen = false;
+                            console.log(err);
+                            this.errorText = 'Something went wrong, error: ' + err;
+                            this.errorOpen = true;
+                        });
+                    } else {
+                        axios.post(url, headers)
+                        .then(res => {
+                            this.infoOpen = false;
+                            if (res.status === 200) {
+                                this.successText = 'Successfully added your new post';
+                                this.successOpen = true;
+                                //On success, clear all v-model fields
+                                this.clearFields();
+                            }
+                        })
+                        .catch(err => {
+                            this.infoOpen = false;
+                            console.log(err);
+                            this.errorText = 'Something went wrong, error: ' + err;
+                            this.errorOpen = true;
+                        });
+                    }
             } else {
                 // Form not fully filled
                 this.warningOpen = true;
@@ -201,6 +223,38 @@ export default {
         }
     },
     computed: {
+        mode() {
+            if (this.modalEditMode) {
+                axios.get('http://localhost:3000/api/posts/id/' + this.modalEditId)
+                    .then(res => {
+                        this.type = res.data.type;
+                        this.category = res.data.category;
+                        this.money = res.data.money;
+                        this.note = res.data.note;
+                    })
+                    .catch(err => console.log(err));
+                return "Edit";
+            } else {
+                this.type = "";
+                this.category = "";
+                this.money = "";
+                this.note = "";
+                return "Add";
+            }
+        },
+        modalEditId: {
+            get () {
+                return this.$store.state.addModal.modalEditId
+            }
+        },
+        modalEditMode: {
+            get () {
+                return this.$store.state.addModal.modalEditMode;
+            },
+            set (bool) {
+                this.$store.commit('addModal/set_modalEditMode', bool);
+            }
+        },
         trackType: {
             get () {
                 return this.$store.state.track.trackType;
@@ -218,10 +272,10 @@ export default {
         },
         addModalOpen: {
             get () {
-                return this.$store.state.addModalOpen;
+                return this.$store.state.addModal.addModalOpen;
             },
             set (bool) {
-                this.$store.commit('set_addModalOpen', bool);
+                this.$store.commit('addModal/set_addModalOpen', bool);
             }
         },
         successText: {

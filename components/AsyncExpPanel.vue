@@ -1,8 +1,10 @@
 <template>
     <v-expansion-panel>
-        <!-- Actual panel when loaded -->
+
+        <!--Placeholder while loading -->
         <v-expansion-panel-header 
             class="headline font-weight-bold"
+            v-if="loading"
         >
             Summary for {{ formattedDate }}
             <!-- Custom icon for income / expenses -->
@@ -12,19 +14,18 @@
             </template>
         </v-expansion-panel-header>
 
-        <!-- Loading Placeholder -->
-        <v-expansion-panel-content
-            v-if="loading"
+        <!-- Actual panel when loaded -->
+        <v-expansion-panel-header 
+            class="headline font-weight-bold"
+            v-if="!loading"
         >
-            <v-card 
-                loading
-                class="mt-5"
-            >
-                <v-card-title>
-                    Loading...
-                </v-card-title>
-            </v-card>
-        </v-expansion-panel-content>
+            Summary for {{ formattedDate }} ({{ formattedBalance }})
+            <!-- Custom icon for income / expenses -->
+            <template v-slot:actions>
+                <v-icon color="green" v-if="balance >= 0">mdi-plus</v-icon>
+                <v-icon color="red" v-else>mdi-minus</v-icon>
+            </template>
+        </v-expansion-panel-header>
 
         <!-- Panel content holding the cards -->
         <v-expansion-panel-content v-if="!loading">
@@ -34,7 +35,7 @@
                 <v-col cols="4">
                     <v-card>
                         <v-card-title style="color:lightBlue;">
-                            Balance: {{ Math.round(balance * 100) / 100 }}
+                            Balance: {{ balance }}
                         </v-card-title>
                     </v-card>
                 </v-col>
@@ -43,7 +44,7 @@
                 <v-col cols="4">
                     <v-card>
                         <v-card-title style="color:red;">
-                            Expense: {{ Math.round(expense * 100) / 100 }}
+                            Expense: {{ expense }}
                         </v-card-title>
                     </v-card>
                 </v-col>
@@ -52,7 +53,7 @@
                 <v-col cols="4">
                     <v-card>
                         <v-card-title style="color:green;">
-                            Income: {{ Math.round(income * 100) / 100 }}
+                            Income: {{ income }}
                         </v-card-title>
                     </v-card>
                 </v-col>
@@ -69,9 +70,9 @@ export default {
         return {
             dataArray: [],
             loading: true,
-            balance: 0,
-            expense: 0,
-            income: 0
+            balance: '',
+            expense: '',
+            income: ''
         }
     },
     props: {
@@ -87,13 +88,19 @@ export default {
     computed: {
         months: {
             get () {
-                return this.$store.state.months
+                return this.$store.state.months;
             }
         },
         formattedDate () {
             let date = new Date(this.year, this.month, 1);
-            return date.getFullYear() + ' ' + this.months[date.getMonth()]
+            return date.getFullYear() + ' ' + this.months[date.getMonth()];
         },
+        formattedBalance () {
+            if (this.balance > 0) {
+                return '+' + String(this.balance);
+            }
+            return this.balance;
+        }
     },
     created() {
         let url = `http://localhost:3000/api/posts/date/${this.year}/${this.month}`;
@@ -112,6 +119,10 @@ export default {
                         }
                 }
                 this.loading = false;
+                const format2DP = x => Math.round(x * 100) / 100;
+                this.balance = format2DP(this.balance);
+                this.income = format2DP(this.income);
+                this.expense = format2DP(this.expense);
             })
             .catch(err => console.log(err));
     }

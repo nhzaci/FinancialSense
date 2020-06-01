@@ -52,17 +52,17 @@
 
             <!-- Overall Balance -->
             <v-col>
-                <OverviewCard title="Balance" :amount="Number(1234.12)"/>
+                <OverviewCard title="Balance" :amount="balance"/>
             </v-col>
 
             <!-- Expenditure -->
             <v-col>
-                <OverviewCard title="Expense" :amount="Number(5334.64)"/>
+                <OverviewCard title="Expense" :amount="expense"/>
             </v-col>
 
             <!-- Income -->
             <v-col>
-                <OverviewCard title="Income" :amount="Number(6568.76)" />
+                <OverviewCard title="Income" :amount="income" />
             </v-col>
             
         </v-row>
@@ -167,12 +167,14 @@
                         <v-btn
                             color="primary"
                             class="mx-2"
+                            @click="edit(item._id)"
                         >
                             EDIT
                         </v-btn>
                         <v-btn
                             color="error"
                             class="mx-2"
+                            @click="del(item.id)"
                         >
                             DELETE
                         </v-btn>
@@ -220,9 +222,59 @@ export default {
         formatDate (date) {
             let dateObj = new Date(date);
             return dateObj.getDate() + ' ' + this.months[dateObj.getMonth()] + ' ' + dateObj.getFullYear()
+        },
+        edit(id) {
+            //Toggle modal for editing, editmode true
+            this.modalEditId = id;
+            console.log(this.modalEditId)
+            this.modalEditMode = true;
+            this.addModalOpen = true;
+        },
+        del(id) {
+            //Modal to confirm
+            //on confirm, send axios delete request and trigger alert banner
         }
     },
     computed: {
+        addModalOpen: {
+            get () {
+                return this.$store.state.addModal.addModalOpen;
+            },
+            set (bool) {
+                this.$store.commit('addModal/set_addModalOpen', bool);
+            }
+        },
+        modalEditMode: {
+            get () {
+                return this.$store.state.addModal.modalEditMode;
+            },
+            set (bool) {
+                this.$store.commit('addModal/set_modalEditMode', bool);
+            }
+        },
+        modalEditId: {
+            get () {
+                return this.$store.state.addModal.modalEditId;
+            },
+            set (bool) {
+                this.$store.commit('addModal/set_modalEditId', bool);
+            }
+        },
+        balance: {
+          get () {
+            return this.$store.state.balance
+          }
+        },
+        income: {
+          get () {
+            return this.$store.state.income
+          }
+        },
+        expense: {
+          get () {
+            return this.$store.state.expense
+          }
+        },
         months: {
             get () {
                 return this.$store.state.months;
@@ -255,6 +307,9 @@ export default {
     },
     created() {
         this.$store.dispatch('get_dbArray')
+        this.$store.dispatch('get_balance');
+        this.$store.dispatch('get_income');
+        this.$store.dispatch('get_expense');
     }
 }
 </script>

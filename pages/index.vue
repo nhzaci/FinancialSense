@@ -6,17 +6,17 @@
 
       <!-- Overall Balance -->
       <v-col>
-        <OverviewCard title="Balance" :amount="Number(1234.12)"/>
+        <OverviewCard title="Balance" :amount="balance"/>
       </v-col>
 
       <!-- Expenditure -->
       <v-col>
-        <OverviewCard title="Expense" :amount="Number(5334.64)"/>
+        <OverviewCard title="Expense" :amount="expense"/>
       </v-col>
 
       <!-- Income -->
       <v-col>
-        <OverviewCard title="Income" :amount="Number(6568.76)" />
+        <OverviewCard title="Income" :amount="income" />
       </v-col>
     </v-row>
 
@@ -75,6 +75,21 @@ export default {
   data: () => ({
   }),
   computed: {
+    balance: {
+      get () {
+        return this.$store.state.balance
+      }
+    },
+    income: {
+      get () {
+        return this.$store.state.income
+      }
+    },
+    expense: {
+      get () {
+        return this.$store.state.expense
+      }
+    },
     expenditureArray: {
       get () {
         return this.$store.state.expenditureArray
@@ -98,6 +113,9 @@ export default {
   },
   created() {
     this.$store.dispatch('get_monthYears');
+    this.$store.dispatch('get_balance');
+    this.$store.dispatch('get_income');
+    this.$store.dispatch('get_expense');
   }
 }
 </script>

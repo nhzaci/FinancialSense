@@ -19,7 +19,9 @@ let store = {};
   // Enforce store modules
   store.modules = store.modules || {}
 
+  resolveStoreModules(require('../store/addModal.js'), 'addModal.js')
   resolveStoreModules(require('../store/alerts.js'), 'alerts.js')
+  resolveStoreModules(require('../store/dialogModal.js'), 'dialogModal.js')
   resolveStoreModules(require('../store/track.js'), 'track.js')
 
   // If the environment supports hot reloading...
@@ -27,7 +29,9 @@ let store = {};
   if (process.client && module.hot) {
     // Whenever any Vuex module is updated...
     module.hot.accept([
+      '../store/addModal.js',
       '../store/alerts.js',
+      '../store/dialogModal.js',
       '../store/index.js',
       '../store/track.js',
     ], () => {

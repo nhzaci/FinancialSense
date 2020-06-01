@@ -53,16 +53,25 @@ export default {
   },
   methods: {
     toggleModalOpen () {
+      this.modalEditMode = false;
       this.addModalOpen = !this.addModalOpen;
     }
   },
   computed: {
     addModalOpen: {
         get () {
-            return this.$store.state.addModalOpen;
+            return this.$store.state.addModal.addModalOpen;
         },
         set (bool) {
-            this.$store.commit('set_addModalOpen', bool);
+            this.$store.commit('addModal/set_addModalOpen', bool);
+        },
+    },
+    modalEditMode: {
+        get () {
+            return this.$store.state.addModal.modalEditMode;
+        },
+        set (bool) {
+            this.$store.commit('addModal/set_modalEditMode', bool);
         }
     }
   }
