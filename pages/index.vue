@@ -5,42 +5,47 @@
     <v-row justify="center">
 
       <!-- Overall Balance -->
-      <v-col>
-        <OverviewCard title="Balance" :amount="balance"/>
+      <v-col cols="12" lg="4">
+          <OverviewCard title="Balance" :amount="balance"/>
+          <!-- Average Balance Chart -->
+          <ChartCard title="balance" icon="mdi-currency-usd" v-if="!loadingMonthYears"/>
+          <v-skeleton-loader
+            type="card"
+            v-else
+          ></v-skeleton-loader>
       </v-col>
 
       <!-- Expenditure -->
-      <v-col>
-        <OverviewCard title="Expense" :amount="expense"/>
+      <v-col cols="12" lg="4">
+          <OverviewCard title="Expense" :amount="expense"/>
+          <!-- Average Expense Chart -->
+          <ChartCard title="expense" icon="mdi-trending-down" v-if="!loadingMonthYears"/>
+          <v-skeleton-loader
+            type="card"
+            v-else
+          ></v-skeleton-loader>
       </v-col>
 
       <!-- Income -->
-      <v-col>
-        <OverviewCard title="Income" :amount="income" />
+      <v-col cols="12" lg="4">
+          <OverviewCard title="Income" :amount="income" />
+          <!-- Average Income Chart -->
+          <ChartCard title="income" icon="mdi-trending-up" v-if="!loadingMonthYears"/>
+          <v-skeleton-loader
+            type="card"
+            v-else
+          ></v-skeleton-loader>
       </v-col>
     </v-row>
 
-    <!-- Middle row of cards -->
-    <v-row justify="center">
-      <v-col>
-        <!-- Average Expenditure Chart -->
-        <ChartCard title="Expenditure" />
-      </v-col>
-
-      <v-col>
-        <!-- Average Savings Chart -->
-        <ChartCard title="Savings" />
-      </v-col>
-    </v-row>
-    <!-- End of Middle row of cards -->
-    
     <!-- Bottom Row -->
     <v-row class="pa-5">
       
       <v-skeleton-loader 
         v-if="loadingMonthYears"
         type="list-item-two-lines"
-      />
+      ></v-skeleton-loader>
+      
       <v-expansion-panels 
         popout 
         v-else
@@ -75,40 +80,26 @@ export default {
   data: () => ({
   }),
   computed: {
-    balance: {
-      get () {
-        return this.$store.state.balance
-      }
+    balance() {
+      return this.$store.state.balance
     },
-    income: {
-      get () {
-        return this.$store.state.income
-      }
+    income() {
+      return this.$store.state.income
     },
-    expense: {
-      get () {
-        return this.$store.state.expense
-      }
+    expense() {
+      return this.$store.state.expense
     },
-    expenditureArray: {
-      get () {
-        return this.$store.state.expenditureArray
-      }
+    expenditureArray() {
+      return this.$store.state.expenditureArray
     },
-    dbArray: {
-      get() {
-        return this.$store.state.dbArray;
-      }
+    dbArray() {
+      return this.$store.state.dbArray;
     },
-    monthYears: {
-      get() {
-        return this.$store.state.monthYears;
-      }
+    monthYears() {
+      return this.$store.state.monthYears;
     },
-    loadingMonthYears: {
-      get () {
+    loadingMonthYears() {
         return this.$store.state.loadingMonthYears;
-      }
     },
   },
   created() {

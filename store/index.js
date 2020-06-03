@@ -3,6 +3,7 @@ const apiURL = 'http://localhost:3000/api';
 
 export const state = () => ({
     months: ['January','Feburary','March','April','May','June','July','August','September','October','November','December'],
+    shortMonths: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
     routes: [
         { title: 'Home', icon: 'mdi-home', path: '/'},
         { title: 'Track', icon: 'mdi-trending-up', path: '/track'},
@@ -18,7 +19,8 @@ export const state = () => ({
     loadingMonthYears: true,
     balance: 0,
     expense: 0,
-    income: 0
+    income: 0,
+    navOverlay: false
 })
 
 export const mutations = {
@@ -30,6 +32,9 @@ export const mutations = {
     },
     set_loadingDB (state, bool) {
         state.loadingDB = bool;
+    },
+    set_navOverlay (state, bool) {
+        state.navOverlay = bool;
     },
     set_loadingMonthYears (state, bool) {
         state.loadingMonthYears = bool;

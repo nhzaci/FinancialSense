@@ -5,53 +5,68 @@
       shaped
     >
       <v-card-title>
-        <span class="font-weight-bold mx-2">{{ title }}</span> 
-        <v-icon large>mdi-trending-up</v-icon>
+        <span class="font-weight-bold mx-2">{{ title | capitalise }}</span> 
+        <v-icon class="mx-2" large>{{ icon }}</v-icon>
       </v-card-title>
-      <v-sheet color="transparent">
+      <v-card-text class="ma-0 pa-0">
+        <v-skeleton-loader
+          v-if="loading"
+          type="card"
+        ></v-skeleton-loader>
         <v-sparkline
+          v-if="!loading"
+          :labels="labels"
           :value="value"
-          :gradient="gradient"
-          :smooth="radius || false"
-          :padding="padding"
-          :line-width="width"
-          :stroke-linecap="lineCap"
-          :gradient-direction="gradientDirection"
-          :fill="fill"
-          :type="type"
-          :auto-line-width="autoLineWidth"
-          auto-draw
+          color="white"
+          line-width="2"
+          padding="16"
+          smooth
         ></v-sparkline>
-      </v-sheet>
+      </v-card-text>
     </v-card>
   </v-container>
 </template>
 
 <script>
-const gradients = [
-    ['#222'],
-    ['#42b3f4'],
-    ['red', 'orange', 'yellow'],
-    ['purple', 'violet'],
-    ['#00c6ff', '#F0F', '#FF0'],
-    ['#f72047', '#ffd200', '#1feaea'],
-]
+import axios from 'axios';
+
 export default {
     data: () => ({
-        width: 2,
-        radius: 10,
-        padding: 8,
-        lineCap: 'round',
-        gradient: gradients[2],
-        value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
-        gradientDirection: 'top',
-        gradients,
-        fill: false,
-        type: 'trend',
-        autoLineWidth: false,
+      loading: true,
+      labels: [],
+      value: []
     }),
     props: {
-        title: String
+        title: String,
+        icon: String
+    },
+    computed: {
+      monthYears () {
+        return this.$store.state.monthYears;
+      },
+      shortMonths() {
+        return this.$store.state.shortMonths;
+      }
+    },
+    filters: {
+      capitalise (string) {
+        return String(string).toUpperCase();
+      }
+    },
+    async created() {
+      let i;
+      for (i = this.monthYears.length-1; i >= 0; i--) {
+        let my = this.monthYears[i];
+        let url = `http://localhost:3000/api/posts/sum/${this.title}/${my.year}/${my.month}`;
+        const resp = await axios.get(url)
+        try {
+          this.value.push(resp.data);
+          this.labels.push(`${this.shortMonths[my.month]} ${my.year}`);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      this.loading = false;
     }
 }
 </script>

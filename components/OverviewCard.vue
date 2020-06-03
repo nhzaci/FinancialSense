@@ -4,10 +4,10 @@
           <v-card-title>
               {{ title }}
           </v-card-title>
-          <v-card-text>
-            <div class="font-weight-bold display-2 text-center">
+          <v-card-text class="text-center">
+            <span :class="titleSize + ' font-weight-bold'">
                 {{ amount }}
-            </div>
+            </span>
           </v-card-text>
         </v-card>
     </v-container>
@@ -23,6 +23,14 @@ export default {
         amount: {
             type: Number,
             default: 0.0
+        }
+    },
+    computed: {
+        titleSize() {
+            if (this.$vuetify.breakpoint.mdAndUp) {
+                return 'display-2';
+            }
+            return 'headline';
         }
     }
 }

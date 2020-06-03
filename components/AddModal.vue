@@ -20,7 +20,7 @@
                     <v-row align="center">
                         
                         <!-- Col 1 -->
-                        <v-col cols="3">
+                        <v-col cols="12" md="3">
                             <!-- Indicate type (exp / inc) -->
                             <v-overflow-btn
                                 class="mx-2"
@@ -32,7 +32,7 @@
                         </v-col>
                         
                         <!-- Col 2 -->
-                        <v-col cols="3">
+                        <v-col cols="12" md="3">
                             <!-- Indicate expense category -->
                             <v-overflow-btn
                                 class="mx-2"
@@ -55,7 +55,7 @@
                         </v-col>
 
                         <!-- Col 3 -->
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                             <!-- Indicate note -->
                             <v-text-field 
                                 solo
@@ -85,10 +85,10 @@
                 <!-- Card bottom -->
                 <v-card-actions>
                     <!-- Action buttons -->
-                    <v-btn class="mx-4" color="primary" large @click="save">
+                    <v-btn class="mx-2" color="primary" large @click="save">
                         Save
                     </v-btn>
-                    <v-btn class="mx-4" color="error" large @click="clear">
+                    <v-btn class="mx-2" color="error" large @click="clear">
                         Clear
                     </v-btn>
 

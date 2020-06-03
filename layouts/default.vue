@@ -2,10 +2,13 @@
   <v-app light>
 
     <!-- Nav Bar Here -->
-    <NavBar />
+    <NavBar/>
 
     <!-- Drawer here -->
-    <NavDrawer />
+    <NavDrawer v-if="$vuetify.breakpoint.mdAndUp"/>
+
+    <!-- Nav Overlay here -->
+    <NavOverlay v-else/>
 
     <v-content>
       <!-- Alert banner here -->
@@ -24,9 +27,11 @@
         right
         fab
         @click="toggleModalOpen"
+        v-if="$vuetify.breakpoint.mdAndUp"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
+      <SpeedDial v-else />
     </v-content>
 
     <!-- AddModal component here -->
@@ -43,13 +48,17 @@ import AddModal from '@/components/AddModal';
 import Alerts from '@/components/Alerts';
 import NavBar from '@/components/NavBar';
 import NavDrawer from '@/components/NavDrawer';
+import NavOverlay from '@/components/NavOverlay';
+import SpeedDial from '@/components/SpeedDial';
 
 export default {
   components: {
     AddModal,
     Alerts,
     NavBar,
-    NavDrawer
+    NavDrawer,
+    NavOverlay,
+    SpeedDial
   },
   methods: {
     toggleModalOpen () {
