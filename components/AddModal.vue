@@ -191,7 +191,7 @@ export default {
                         axios.post(url, headers)
                         .then(res => {
                             this.infoOpen = false;
-                            if (res.status === 200) {
+                            if (res.status === 201) {
                                 this.successText = 'Successfully added your new post';
                                 this.successOpen = true;
                                 //On success, clear all v-model fields
