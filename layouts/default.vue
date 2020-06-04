@@ -31,7 +31,7 @@
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
-      <SpeedDial v-else />
+      <SpeedDial v-if="!$vuetify.breakpoint.mdAndUp"/>
     </v-content>
 
     <!-- AddModal component here -->
@@ -86,3 +86,4 @@ export default {
   }
 }
 </script>
+rm

@@ -2,15 +2,28 @@
     <v-overlay
         :value="navOverlay"
     >
-        <v-btn
+        <v-row
             v-for="route in routes"
             :key="route.title"
-            text
-            :to="route.path"
+            justify="center"
         >
-            <v-icon class="mx-2">{{ route.icon }}</v-icon>
-            {{ route.title }}
-        </v-btn>
+            <v-btn
+                text
+                :to="route.path"
+                x-large
+            >
+                {{ route.title }}
+            </v-btn>
+        </v-row>
+        <v-row justify="center">
+            <v-btn
+                @click="navOverlay=!navOverlay"
+                x-large
+                icon
+            >
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
+        </v-row>
     </v-overlay>
 </template>
 
