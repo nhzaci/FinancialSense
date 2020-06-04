@@ -174,7 +174,7 @@
                         <v-btn
                             color="error"
                             class="mx-2"
-                            @click="del(item.id)"
+                            @click="del(item._id)"
                         >
                             DELETE
                         </v-btn>
@@ -183,10 +183,13 @@
             </v-expansion-panel>
         </v-expansion-panels>
 
+        <DialogModal @confirm="confirmDelete"/>
     </v-container>
 </template>
 
 <script>
+import axios from 'axios';
+import DialogModal from '@/components/DialogModal';
 import OverviewCard from '@/components/OverviewCard';
 
 export default {
@@ -194,10 +197,12 @@ export default {
         return {
             duration: '',
             type: '',
-            category: ''
+            category: '',
+            deleteId: ''
         }
     },
     components: {
+        DialogModal,
         OverviewCard
     },
     methods: {
@@ -231,11 +236,140 @@ export default {
             this.addModalOpen = true;
         },
         del(id) {
+            //Add id to data
+            this.deleteId = id;
             //Modal to confirm
+            this.dialogModalOpen = true;
+            this.dialogModalTitle = 'Confirm Delete'
+            this.dialogModalText = 'Are you sure you want to delete this transaction?'
+            this.dialogModalYes = 'Confirm'
+            this.dialogModalNo = 'Cancel'
+        },
+        async confirmDelete() {
             //on confirm, send axios delete request and trigger alert banner
+            this.infoOpen = true;
+            this.infoText = 'Deleting...';
+            let url = `http://localhost:3000/api/posts/id/${this.deleteId}`;
+            try {
+                let res = await axios.delete(url);
+                if (res.status === 200) {
+                    this.infoOpen = false;
+                    this.successText = 'Your post was successfully deleted';
+                    this.successOpen = true;
+                }
+            } catch (error) {
+                this.infoOpen = false;
+                console.log(error);
+                this.errorText = 'Something went wrong, error: ' + error;
+                this.errorOpen = true;
+            }
         }
     },
     computed: {
+        successText: {
+            get () {
+                return this.$store.state.alerts.successText
+            },
+            set (text) {
+                this.$store.commit('alerts/set_successText', text);
+            }
+        },
+        infoText: {
+            get () {
+                return this.$store.state.alerts.infoText
+            },
+            set (text) {
+                this.$store.commit('alerts/set_infoText', text);
+            }
+        },
+        warningText: {
+            get () {
+                return this.$store.state.alerts.warningText
+            },
+            set (text) {
+                this.$store.commit('alerts/set_warningText', text);
+            }
+        },
+        errorText: {
+            get () {
+                return this.$store.state.alerts.errorText
+            },
+            set (text) {
+                this.$store.commit('alerts/set_errorText', text);
+            }
+        },
+        infoOpen: {
+            get () {
+                return this.$store.state.alerts.infoOpen
+            },
+            set (bool) {
+                this.$store.commit('alerts/set_infoOpen', bool);
+            }
+        },
+        successOpen: {
+            get () {
+                return this.$store.state.alerts.successOpen
+            },
+            set (bool) {
+                this.$store.commit('alerts/set_successOpen', bool);
+            }
+        },
+        warningOpen: {
+            get () {
+                return this.$store.state.alerts.warningOpen
+            },
+            set (bool) {
+                this.$store.commit('alerts/set_warningOpen', bool);
+            }
+        },
+        errorOpen: {
+            get () {
+                return this.$store.state.alerts.errorOpen
+            },
+            set (bool) {
+                this.$store.commit('alerts/set_errorOpen', bool);
+            }
+        },
+        dialogModalTitle: {
+            get () {
+                return this.$store.state.dialogModal.dialogModalTitle;
+            },
+            set (bool) {
+                this.$store.commit('dialogModal/set_dialogModalTitle', bool);
+            }
+        },
+        dialogModalYes: {
+            get () {
+                return this.$store.state.dialogModal.dialogModalYes;
+            },
+            set (bool) {
+                this.$store.commit('dialogModal/set_dialogModalYes', bool);
+            }
+        },
+        dialogModalNo: {
+            get () {
+                return this.$store.state.dialogModal.dialogModalNo;
+            },
+            set (bool) {
+                this.$store.commit('dialogModal/set_dialogModalNo', bool);
+            }
+        },
+        dialogModalText: {
+            get () {
+                return this.$store.state.dialogModal.dialogModalText;
+            },
+            set (bool) {
+                this.$store.commit('dialogModal/set_dialogModalText', bool);
+            }
+        },
+        dialogModalOpen: {
+            get () {
+                return this.$store.state.dialogModal.dialogModalOpen;
+            },
+            set (bool) {
+                this.$store.commit('dialogModal/set_dialogModalOpen', bool);
+            }
+        },
         addModalOpen: {
             get () {
                 return this.$store.state.addModal.addModalOpen;

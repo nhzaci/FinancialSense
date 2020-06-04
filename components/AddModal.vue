@@ -149,7 +149,7 @@ export default {
         }
     },
     methods: {
-        save() {
+        async save() {
             if (this.type !== "" && 
                 this.category !== "" && 
                 this.note !== "" && 
@@ -171,7 +171,7 @@ export default {
                     //if all fields filled, send post
                     let url = 'http://localhost:3000/api/posts';
                     if (this.modalEditMode) {
-                        axios.put(url + '/id/' + this.modalEditId, headers)
+                        await axios.put(url + '/id/' + this.modalEditId, headers)
                         .then(res => {
                             this.infoOpen = false;
                             if (res.status === 200) {
@@ -223,9 +223,9 @@ export default {
         }
     },
     computed: {
-        mode() {
+        async mode() {
             if (this.modalEditMode) {
-                axios.get('http://localhost:3000/api/posts/id/' + this.modalEditId)
+                await axios.get('http://localhost:3000/api/posts/id/' + this.modalEditId)
                     .then(res => {
                         this.type = res.data.type;
                         this.category = res.data.category;
