@@ -2,7 +2,7 @@
     <v-row justify="center">
         <v-dialog 
             max-width="auto"
-            v-model="addModalOpen" 
+            v-model="addModalOpen"
         >
             <v-card
                 id="addToolbar"
@@ -40,7 +40,7 @@
                                 label="Category"
                                 target="#addToolbar"
                                 v-model="category"
-                                v-if="type==='Expense'"
+                                v-if="type === 'Expense'"
                             ></v-overflow-btn>
 
                             <!-- Indicate income category -->
@@ -128,6 +128,7 @@
 
 <script>
 import axios from 'axios';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
     data() {
@@ -149,16 +150,33 @@ export default {
         }
     },
     methods: {
-        async save() {
+        fieldsFilled() {
             if (this.type !== "" && 
-                this.category !== "" && 
-                this.note !== "" && 
-                this.money !== "") {
+            this.category !== "" && 
+            this.note !== "" &&
+            this.money !== "") {
+                return true;
+            }
+            return false;
+        },
+        catchError(err) {
+            this.setInfoOpen(false);
+            console.log(err);
+            this.setErrorText('Something went wrong, error: ' + err);
+            this.setErrorOpen(true);
+        },
+        success(modeString) {
+            this.setSuccesText('Successfully ' + modeString);
+            this.setSuccessOpen(true);
+            this.clearFields();
+        },
+        async save() {
+            if (fieldsFilled) {
                     //Close modal
                     this.addModalOpen = false;
-                    this.warningOpen = false; // in case warning got opened
-                    this.infoText = 'Posting...'
-                    this.infoOpen = true;
+                    this.setWarningOpen(false); // in case warning got opened
+                    this.setInfoText('Posting...');
+                    this.setInfoOpen(true);
 
                     //headers required
                     var headers = {
@@ -175,40 +193,28 @@ export default {
                         .then(res => {
                             this.infoOpen = false;
                             if (res.status === 200) {
-                                this.successText = 'Successfully added your new post';
-                                this.successOpen = true;
-                                //On success, clear all v-model fields
-                                this.clearFields();
+                                success('edited your post!');
                             }
                         })
                         .catch(err => {
-                            this.infoOpen = false;
-                            console.log(err);
-                            this.errorText = 'Something went wrong, error: ' + err;
-                            this.errorOpen = true;
+                            this.catchError(err);
                         });
                     } else {
                         axios.post(url, headers)
                         .then(res => {
                             this.infoOpen = false;
                             if (res.status === 201) {
-                                this.successText = 'Successfully added your new post';
-                                this.successOpen = true;
-                                //On success, clear all v-model fields
-                                this.clearFields();
+                                success('added your post!');
                             }
                         })
                         .catch(err => {
-                            this.infoOpen = false;
-                            console.log(err);
-                            this.errorText = 'Something went wrong, error: ' + err;
-                            this.errorOpen = true;
+                            this.catchError(err);
                         });
                     }
             } else {
                 // Form not fully filled
-                this.warningOpen = true;
-                this.warningText = 'Please fill up all fields!'
+                this.setWarningOpen(true);
+                this.setWarningText('Please fill up all fields!');
             }
         },
         clear () {
@@ -220,12 +226,23 @@ export default {
             this.category = "";
             this.money = "";
             this.note = "";
-        }
+        },
+        ...mapMutations({
+            setModalEditMode: 'addModal/set_modalEditMode',
+            setSuccessText: 'alerts/set_successText',
+            setInfoText: 'alerts/set_infoText',
+            setWarningText: 'alerts/set_warningText',
+            setErrorText: 'alerts/set_errorText',
+            setInfoOpen: 'alerts/set_infoOpen',
+            setSuccessOpen: 'alerts/set_successOpen',
+            setWarningOpen: 'alerts/set_warningOpen',
+            setErrorOpen: 'alerts/set_errorOpen'
+        })
     },
     computed: {
-        async mode() {
+        mode() {
             if (this.modalEditMode) {
-                await axios.get('http://localhost:3000/api/posts/id/' + this.modalEditId)
+                axios.get('http://localhost:3000/api/posts/id/' + this.modalEditId)
                     .then(res => {
                         this.type = res.data.type;
                         this.category = res.data.category;
@@ -242,106 +259,28 @@ export default {
                 return "Add";
             }
         },
-        modalEditId: {
-            get () {
-                return this.$store.state.addModal.modalEditId
-            }
-        },
-        modalEditMode: {
-            get () {
-                return this.$store.state.addModal.modalEditMode;
-            },
-            set (bool) {
-                this.$store.commit('addModal/set_modalEditMode', bool);
-            }
-        },
-        trackType: {
-            get () {
-                return this.$store.state.track.trackType;
-            }
-        },
-        incCat: {
-            get () {
-                return this.$store.state.track.incCat;
-            }
-        },
-        expCat: {
-            get () {
-                return this.$store.state.track.expCat;
-            }
-        },
         addModalOpen: {
-            get () {
+            get() {
                 return this.$store.state.addModal.addModalOpen;
             },
-            set (bool) {
+            set(bool) {
                 this.$store.commit('addModal/set_addModalOpen', bool);
             }
         },
-        successText: {
-            get () {
-                return this.$store.state.alerts.successText
-            },
-            set (text) {
-                this.$store.commit('alerts/set_successText', text);
-            }
-        },
-        infoText: {
-            get () {
-                return this.$store.state.alerts.infoText
-            },
-            set (text) {
-                this.$store.commit('alerts/set_infoText', text);
-            }
-        },
-        warningText: {
-            get () {
-                return this.$store.state.alerts.warningText
-            },
-            set (text) {
-                this.$store.commit('alerts/set_warningText', text);
-            }
-        },
-        errorText: {
-            get () {
-                return this.$store.state.alerts.errorText
-            },
-            set (text) {
-                this.$store.commit('alerts/set_errorText', text);
-            }
-        },
-        infoOpen: {
-            get () {
-                return this.$store.state.alerts.infoOpen
-            },
-            set (bool) {
-                this.$store.commit('alerts/set_infoOpen', bool);
-            }
-        },
-        successOpen: {
-            get () {
-                return this.$store.state.alerts.successOpen
-            },
-            set (bool) {
-                this.$store.commit('alerts/set_successOpen', bool);
-            }
-        },
-        warningOpen: {
-            get () {
-                return this.$store.state.alerts.warningOpen
-            },
-            set (bool) {
-                this.$store.commit('alerts/set_warningOpen', bool);
-            }
-        },
-        errorOpen: {
-            get () {
-                return this.$store.state.alerts.errorOpen
-            },
-            set (bool) {
-                this.$store.commit('alerts/set_errorOpen', bool);
-            }
-        },
+        ...mapState({
+            modalEditId: state => state.addModal.modalEditId,
+            modalEditMode: state => state.addModal.modalEditMode,
+            trackType: state => state.track.trackType,
+            incCat: state => state.track.incCat,
+            expCat: state => state.track.expCat,
+            successText: state => state.alerts.successText,
+            infoText: state => state.alerts.infoText,
+            warningText: state => state.alerts.warningText,
+            errorText: state => state.alerts.errorText,
+            successOpen: state => state.alerts.successOpen,
+            warningOpen: state => state.alerts.warningOpen,
+            errorOpen: state => state.alerts.errorOpen
+        })
     }
 }
 </script>
