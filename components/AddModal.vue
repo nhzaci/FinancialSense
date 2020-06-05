@@ -88,7 +88,7 @@
                     <v-btn class="mx-2" color="primary" large @click="save">
                         Save
                     </v-btn>
-                    <v-btn class="mx-2" color="error" large @click="clear">
+                    <v-btn class="mx-2" color="error" large @click="dialogOpen = true">
                         Clear
                     </v-btn>
 
@@ -123,6 +123,30 @@
         </v-dialog>
 
         <!-- Second v-dialog for confirmation of deletion -->
+        <v-row justify-center>
+            <v-col cols="12" md="6">
+                <v-dialog
+                    v-model="dialogOpen"
+                >
+                    <v-card>
+                        <v-card-title>
+                            Clear Fields
+                        </v-card-title>
+                        <v-card-text>
+                            Are you sure you want to clear the fields?
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-btn color="success" @click="clearFields; dialogOpen = false;">
+                                Confirm
+                            </v-btn>
+                            <v-btn color="error" @click="dialogOpen = false">
+                                Cancel
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-col>
+        </v-row>
     </v-row>
 </template>
 
@@ -146,7 +170,8 @@ export default {
             ],
             noteRules: [
                 value => !!value || "A note is required!"
-            ]
+            ],
+            dialogOpen: false
         }
     },
     methods: {
@@ -193,7 +218,7 @@ export default {
                         .then(res => {
                             this.infoOpen = false;
                             if (res.status === 200) {
-                                success('edited your post!');
+                                this.success('edited your post!');
                             }
                         })
                         .catch(err => {
@@ -204,7 +229,7 @@ export default {
                         .then(res => {
                             this.infoOpen = false;
                             if (res.status === 201) {
-                                success('added your post!');
+                                this.success('added your post!');
                             }
                         })
                         .catch(err => {
@@ -216,10 +241,6 @@ export default {
                 this.setWarningOpen(true);
                 this.setWarningText('Please fill up all fields!');
             }
-        },
-        clear () {
-            //Modal, check confirmation before cancelling
-            console.log("clear button clicked")
         },
         clearFields () {
             this.type = "";
