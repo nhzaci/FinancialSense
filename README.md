@@ -41,7 +41,7 @@ The project goes along with the back end API FinancialSenseExpress, which is ava
 ![](./screenshots/AddTransaction.png)
 
 ### Editing Transactions
-![](./screenshots/EditTransactions.png)
+![](./screenshots/EditTransaction.png)
 
 ### Expand-on-hover Nav Drawer
 ![](./screenshots/NavDrawer.png)
