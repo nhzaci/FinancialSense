@@ -1,9 +1,9 @@
 # FinancialSense
 
-### About
+## About
 FinancialSense is a financial tracker with beautiful dashbaords aimed at helping users get an easier overview of their expenditure and aid in saving money
 
-### Setting up the project
+## Setting up the project
 
 ```bash
 # clone the repository
@@ -29,7 +29,7 @@ The project goes along with the back end API FinancialSenseExpress, which is ava
 
 * User authentication to be tied up to back end to complete application
 
-### Screenshots
+## Screenshots
 
 ### Home Page
 ![](./screenshots/HomePage.png)
