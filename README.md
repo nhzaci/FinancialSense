@@ -37,8 +37,8 @@ $ npm run start
 $ npm run generate
 ```
 
-The project goes along with the back end API FinancialSenseExpress, please visit https://github.com/nhzaci/FinancialSenseExpress and read the instructions on how to set up the back end and get it up and running.
+The project goes along with the back end API FinancialSenseExpress, which is available [here](https://github.com/nhzaci/FinancialSenseExpress).
 
 ### TODO:
 
-* Login to be tied up to back end
+* User authentication to be tied up to back end to complete application
