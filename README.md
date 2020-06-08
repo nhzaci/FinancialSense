@@ -1,7 +1,7 @@
 # FinancialSense
 
 ## About
-FinancialSense is a financial tracker with beautiful dashbaords aimed at helping users get an easier overview of their expenditure and aid in saving money
+FinancialSense is a financial tracker with beautiful dashboards aimed at helping users get an easier overview of their expenditure and aid in saving money
 
 ## Setting up the project
 
